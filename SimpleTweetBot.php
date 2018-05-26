@@ -31,6 +31,11 @@
     echo $mysqli->error;
   } else {
     $row = $ret->fetch_assoc();
+    if( !$row ) {
+      echo 'Nothing to tweet.';
+      $mysqli->close();
+      die();
+    }
     $id = $row["id"];
     $count = $row["count"];
     $tweet = $row["tweet"];
@@ -42,6 +47,7 @@
       $result = $connection->post( "statuses/update", array("status" => $tweet) );
     } catch ( Exception $e ) {
       echo 'Twitter statuses/update error: '.$e->getMessage();
+      $mysqli->close();
       die();
     }
 
